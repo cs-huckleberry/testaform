@@ -3,11 +3,9 @@ provider "aws" {
 }
 data "aws_availability_zones" "all" {}
 resource "aws_launch_configuration" "example" {
-    # grab the latest config from work
     image_id        = "ami-79873901"
     instance_type   = "t2.micro"
-    security_groups =
-["${aws_security_group.instance.id}"]
+    security_groups = ["${aws_security_group.instance.id}"]
     user_data = <<-EOF
                 #!/bin/bash
                 echo "Hello, World" > index.html
@@ -52,11 +50,8 @@ resource "aws_security_group" "elb" {
     }
 }
 resource "aws_autoscaling_group" "example" {
-    launch_configuration  =
-    "${aws_launch_configuration.example.id}"
-    availability_zones =
-    ["${data.aws_availability_zones.all.names}"]
-    
+    launch_configuration  = "${aws_launch_configuration.example.id}"
+    availability_zones = ["${data.aws_availability_zones.all.names}"]
     load_balancers      = ["${aws_elb.example.name}"]
     health_check_type   = "ELB"
 
@@ -71,10 +66,8 @@ resource "aws_autoscaling_group" "example" {
 }
 resource "aws_elb" "example" {
     name            = "terraform-asg-example"
-    availability_zones  =
-    ["${data.aws_availability_zones.all.names}"]
-    security_groups     =
-    ["${aws_security_group.elb.id}"]
+    availability_zones  = ["${data.aws_availability_zones.all.names}"]
+    security_groups     = ["${aws_security_group.elb.id}"]
     
     listener {
         lb_port                 = 80

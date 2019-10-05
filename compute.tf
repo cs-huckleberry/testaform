@@ -1,5 +1,4 @@
 #launches ec2 instance with AWS Linux 2
-  
 
 data "aws_ami" "aws_linux_2" {
   most_recent = true
