@@ -115,7 +115,7 @@ resource "aws_lb" "example" {
       #allocation_id = "${aws_eip.example2.id}"
     }
     
-    security_groups     = "aws_security_group.alb.id"
+    security_groups     = ["${aws_security_group.alb.id}"]
     
     listener {
         lb_port                 = 80
