@@ -1,0 +1,2 @@
+#cloudtrail enable
+#guardduty enable
