@@ -86,8 +86,8 @@ resource "aws_security_group" "instance" {
         create_before_destroy = true
     }
 }
-resource "aws_security_group" "elb" {
-    name = "terraform-example-elb"
+resource "aws_security_group" "alb" {
+    name = "terraform-example-alb"
 
     ingress {
         from_port       = 80
@@ -102,10 +102,20 @@ resource "aws_security_group" "elb" {
         cidr_blocks     = ["0.0.0.0/0"]
     }
 }
-resource "aws_elb" "example" {
+resource "aws_lb" "example" {
     name            = "terraform-asg-example"
-    availability_zones  = data.aws_availability_zones.all.names
-    security_groups     = "aws_security_group.elb.id"
+
+    subnet_mapping {
+      subnet_id     = "${aws_subnet.private_sub_1.id}"
+      #allocation_id = "${aws_eip.example1.id}"
+    }
+
+    subnet_mapping {
+      subnet_id     = "${aws_subnet.private_sub_2.id}"
+      #allocation_id = "${aws_eip.example2.id}"
+    }
+    
+    security_groups     = "aws_security_group.alb.id"
     
     listener {
         lb_port                 = 80
@@ -121,6 +131,6 @@ resource "aws_elb" "example" {
         target              = "HTTP:${var.server_port}/"
     }
 }
-output "elb_dns_name" {
-    value = "${aws_elb.example.dns_name}"
+output "alb_dns_name" {
+    value = "${aws_alb.example.dns_name}"
 }
