@@ -35,7 +35,7 @@ resource "aws_security_group" "allow_tls_to_lb" {
 }
 
 resource "aws_subnet" "private_sub_1" {
-  vpc_id     = "${aws_vpc.main.id}"
+  vpc_id     = aws_vpc.main.id
   availability_zone = data.aws_availability_zones.available.names[0]
   cidr_block = "10.251.0.0/24"
   map_public_ip_on_launch = false
@@ -45,7 +45,7 @@ resource "aws_subnet" "private_sub_1" {
 }
 
 resource "aws_subnet" "private_sub_2" {
-  vpc_id     = "${aws_vpc.main.id}"
+  vpc_id     = aws_vpc.main.id
   availability_zone = data.aws_availability_zones.available.names[1]
   cidr_block = "10.251.1.0/24"
   map_public_ip_on_launch = false
