@@ -3,8 +3,8 @@ resource "aws_vpc" "main" {
     tags = {
     Name = "main"
     Contact = "Christopher Smith"
-    Agency = "OCIO-DISC"
-    Team = "ASIB-EAG"
+    Agency = "SQ"
+    Team = "Security"
     Env = "Test"
     Agreement_ID = "OIR9950"
   }
