@@ -3,8 +3,8 @@ resource "aws_vpc" "main" {
     tags = {
     Name = "main"
     Contact = "Christopher Smith"
-    Agency = "OCIO-DISC"
-    Team = "ASIB-EAG"
+    Agency = "SQ"
+    Team = "Security"
     Env = "Test"
     Agreement_ID = "OIR9950"
   }
@@ -12,7 +12,7 @@ resource "aws_vpc" "main" {
 resource "aws_security_group" "allow_tls_to_lb" {
   name        = "allow_tls_to_lb"
   description = "Allow TLS inbound traffic"
-  vpc_id      = "${aws_vpc.main.id}"
+  vpc_id      = aws_vpc.main.id
 
   ingress {
     # TLS (change to whatever ports you need)
@@ -35,7 +35,7 @@ resource "aws_security_group" "allow_tls_to_lb" {
 }
 
 resource "aws_subnet" "private_sub_1" {
-  vpc_id     = "${aws_vpc.main.id}"
+  vpc_id     = aws_vpc.main.id
   availability_zone = data.aws_availability_zones.available.names[0]
   cidr_block = "10.251.0.0/24"
   map_public_ip_on_launch = false
@@ -45,7 +45,7 @@ resource "aws_subnet" "private_sub_1" {
 }
 
 resource "aws_subnet" "private_sub_2" {
-  vpc_id     = "${aws_vpc.main.id}"
+  vpc_id     = aws_vpc.main.id
   availability_zone = data.aws_availability_zones.available.names[1]
   cidr_block = "10.251.1.0/24"
   map_public_ip_on_launch = false
@@ -55,7 +55,7 @@ resource "aws_subnet" "private_sub_2" {
 }
 
 resource "aws_subnet" "public_sub_1" {
-  vpc_id     = "${aws_vpc.main.id}"
+  vpc_id     = aws_vpc.main.id
   availability_zone = data.aws_availability_zones.available.names[0]
   cidr_block = "10.251.10.0/24"
   map_public_ip_on_launch = false
@@ -65,7 +65,7 @@ resource "aws_subnet" "public_sub_1" {
 }
 
 resource "aws_subnet" "public_sub_2" {
-  vpc_id     = "${aws_vpc.main.id}"
+  vpc_id     = aws_vpc.main.id
   availability_zone = data.aws_availability_zones.available.names[1]
   cidr_block = "10.251.11.0/24"
   map_public_ip_on_launch = false
@@ -77,8 +77,8 @@ resource "aws_security_group" "instance" {
     name = "terraform-example-instance"
 
     ingress {
-        from_port   = "${var.server_port}"
-        to_port     = "${var.server_port}"
+        from_port   = var.server_port
+        to_port     = var.server_port
         protocol    = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }
@@ -106,16 +106,16 @@ resource "aws_lb" "example" {
     name            = "terraform-asg-example"
 
     subnet_mapping {
-      subnet_id     = "${aws_subnet.private_sub_1.id}"
-      #allocation_id = "${aws_eip.example1.id}"
+      subnet_id     = aws_subnet.private_sub_1.id
+      #allocation_id = aws_eip.example1.id
     }
 
     subnet_mapping {
-      subnet_id     = "${aws_subnet.private_sub_2.id}"
-      #allocation_id = "${aws_eip.example2.id}"
+      subnet_id     = aws_subnet.private_sub_2.id
+      #allocation_id = aws_eip.example2.id
     }
     
-    security_groups     = ["${aws_security_group.alb.id}"]
+    security_groups     = aws_security_group.alb.id
     
     listener {
         lb_port                 = 80
@@ -132,5 +132,5 @@ resource "aws_lb" "example" {
     }
 }
 output "alb_dns_name" {
-    value = "${aws_alb.example.dns_name}"
+    value = aws_alb.example.dns_name
 }
