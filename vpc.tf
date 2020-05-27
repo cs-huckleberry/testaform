@@ -87,7 +87,7 @@ resource "aws_security_group" "instance" {
     }
 }
 resource "aws_security_group" "alb" {
-    name = "terraform-example-alb"
+    name = "terraform-example-sg"
 
     ingress {
         from_port       = 80
